@@ -11,19 +11,19 @@ const Header = () => {
           </div>
           
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
+            <a href="#design-studio" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
               Seating
             </a>
-            <a href="#" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
+            <a href="#design-studio" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
               Living
             </a>
-            <a href="#" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
+            <a href="#design-studio" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
               Bedroom
             </a>
-            <a href="#" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
+            <a href="#design-studio" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
               Custom Design
             </a>
-            <a href="#" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
+            <a href="#how-it-works" className="text-sm text-foreground hover:text-muted-foreground transition-colors">
               How It Works
             </a>
           </nav>

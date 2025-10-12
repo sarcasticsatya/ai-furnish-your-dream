@@ -3,11 +3,14 @@ import { Upload, Sparkles, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 
 const DesignStudio = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -22,8 +25,34 @@ const DesignStudio = () => {
 
   const handleGenerate = () => {
     if (uploadedImage && prompt) {
-      setShowResults(true);
+      setIsGenerating(true);
+      setTimeout(() => {
+        setIsGenerating(false);
+        setShowResults(true);
+        toast({
+          title: "Designs Generated!",
+          description: "5 custom furniture options are ready for you.",
+        });
+      }, 2000);
     }
+  };
+
+  const handleRegenerate = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      setIsGenerating(false);
+      toast({
+        title: "Designs Regenerated!",
+        description: "New furniture options have been created.",
+      });
+    }, 2000);
+  };
+
+  const handleSelectOrder = (designNumber: number) => {
+    toast({
+      title: "Added to Cart",
+      description: `Design ${designNumber} has been added to your cart.`,
+    });
   };
 
   return (
@@ -93,10 +122,10 @@ const DesignStudio = () => {
                   size="lg"
                   className="w-full"
                   onClick={handleGenerate}
-                  disabled={!uploadedImage || !prompt}
+                  disabled={!uploadedImage || !prompt || isGenerating}
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Generate Designs
+                  {isGenerating ? "Generating..." : "Generate Designs"}
                 </Button>
               </Card>
             </div>
@@ -104,9 +133,9 @@ const DesignStudio = () => {
             <div className="space-y-8">
               <div className="flex items-center justify-between">
                 <h3 className="text-2xl font-light">Your Custom Designs</h3>
-                <Button variant="outline">
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  Regenerate All
+                <Button variant="outline" onClick={handleRegenerate} disabled={isGenerating}>
+                  <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
+                  {isGenerating ? "Regenerating..." : "Regenerate All"}
                 </Button>
               </div>
 
@@ -123,7 +152,11 @@ const DesignStudio = () => {
                       <p className="text-sm text-muted-foreground mb-4">
                         Custom crafted to match your space
                       </p>
-                      <Button className="w-full" variant="outline">
+                      <Button 
+                        className="w-full" 
+                        variant="outline"
+                        onClick={() => handleSelectOrder(i)}
+                      >
                         Select & Order
                       </Button>
                     </div>

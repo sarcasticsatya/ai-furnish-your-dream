@@ -20,7 +20,11 @@ const Hero = () => {
           Upload your room. Describe your vision. Get custom furniture designed, built, and installed—all in one seamless experience.
         </p>
         
-        <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button 
+          size="lg" 
+          className="bg-primary text-primary-foreground hover:bg-primary/90"
+          onClick={() => document.getElementById('design-studio')?.scrollIntoView({ behavior: 'smooth' })}
+        >
           Start Designing
         </Button>
       </div>
