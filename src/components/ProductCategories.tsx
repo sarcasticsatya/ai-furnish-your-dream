@@ -33,10 +33,10 @@ const ProductCategories = () => {
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <p className="text-sm tracking-[0.3em] text-muted-foreground mb-4 animate-fade-in">
+          <p className="text-sm tracking-[0.3em] text-muted-foreground mb-4">
             EXPLORE CATEGORIES
           </p>
-          <h2 className="text-4xl md:text-5xl font-light tracking-tight text-foreground animate-fade-in [animation-delay:150ms]">
+          <h2 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
             Furniture For Every Space
           </h2>
         </div>

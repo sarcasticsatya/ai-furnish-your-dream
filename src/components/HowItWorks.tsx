@@ -1,5 +1,4 @@
 import { Upload, Sparkles, Package, Home } from "lucide-react";
-import processBackground from "@/assets/process-background.jpg";
 
 const steps = [
   {
@@ -26,23 +25,16 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="relative py-24 bg-accent/30 overflow-hidden">
-      <div className="absolute inset-0 opacity-5">
-        <img 
-          src={processBackground} 
-          alt="Process background" 
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="container mx-auto px-4 relative z-10">
+    <section id="how-it-works" className="py-24 bg-accent/30">
+      <div className="container mx-auto px-4">
         <div className="text-center mb-20">
-          <p className="text-sm tracking-[0.3em] text-muted-foreground mb-4 animate-fade-in">
+          <p className="text-sm tracking-[0.3em] text-muted-foreground mb-4">
             HOW IT WORKS
           </p>
-          <h2 className="text-4xl md:text-5xl font-light text-foreground mb-4 animate-fade-in [animation-delay:150ms]">
+          <h2 className="text-4xl md:text-5xl font-light text-foreground mb-4">
             From Vision to Reality
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto animate-fade-in [animation-delay:300ms]">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             We've reimagined the furniture buying experience. Four simple steps to custom furniture that perfectly fits your space and style.
           </p>
         </div>
@@ -68,10 +60,10 @@ const HowItWorks = () => {
                   <step.icon className="w-9 h-9 text-primary transition-transform duration-300 group-hover:scale-110" />
                 </div>
                 
-                <h3 className="text-xl font-medium text-foreground mb-3 transition-all duration-300 group-hover:text-primary">
+                <h3 className="text-xl font-medium text-foreground mb-3">
                   {step.title}
                 </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed transition-all duration-300 group-hover:text-foreground">
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   {step.description}
                 </p>
               </div>
