@@ -9,12 +9,12 @@ const steps = [
   {
     icon: Sparkles,
     title: "Describe Your Vision",
-    description: "Tell our AI what you're looking for. Style, size, materials—we'll generate 5 custom options just for you.",
+    description: "Tell our AI what you're looking for. Style, size, color—we'll generate 5 custom options crafted from 100% recycled, fire-safe plastic.",
   },
   {
     icon: Package,
     title: "We Build & Ship",
-    description: "Choose your favorite design. We craft your custom furniture with precision and ship it directly to you.",
+    description: "Choose your favorite design. We craft your custom furniture from recycled plastic with precision and ship it directly to you.",
   },
   {
     icon: Home,

@@ -17,7 +17,7 @@ const Hero = () => {
         </h1>
         
         <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Upload your room. Describe your vision. Get custom furniture designed, built, and installed—all in one seamless experience.
+          Upload your room. Describe your vision. Get custom furniture crafted from 100% recycled plastic (PP), engineered to be fire retardant and smoke suppressant—designed, built, and installed in one seamless experience.
         </p>
         
         <Button 

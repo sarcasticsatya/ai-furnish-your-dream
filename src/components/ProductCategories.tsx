@@ -7,19 +7,19 @@ const categories = [
   {
     id: "seating",
     title: "Seating",
-    description: "Custom sofas, chairs, and benches designed for comfort and style",
+    description: "Custom sofas, chairs, and benches crafted from 100% recycled plastic—durable, fire retardant, and sustainably built",
     image: seatingImage,
   },
   {
     id: "living",
     title: "Living",
-    description: "Complete living room solutions from coffee tables to entertainment units",
+    description: "Complete living room solutions from coffee tables to entertainment units—all made from eco-friendly recycled materials",
     image: livingImage,
   },
   {
     id: "bedroom",
     title: "Bedroom",
-    description: "Beds, nightstands, and storage crafted for your perfect sanctuary",
+    description: "Beds, nightstands, and storage engineered from fire-safe recycled plastic for your perfect sanctuary",
     image: bedroomImage,
   },
 ];
