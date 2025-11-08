@@ -1,32 +1,98 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import SizeInputDialog from "./SizeInputDialog";
 import seatingImage from "@/assets/seating-hero.jpg";
 import livingImage from "@/assets/living-hero.jpg";
 import bedroomImage from "@/assets/bedroom-hero.jpg";
 
 const categories = [
   {
-    id: "seating",
-    title: "Seating",
-    description: "Custom sofas, chairs, and benches crafted from 100% recycled plastic—durable, fire retardant, and sustainably built",
+    id: "modular-kitchens",
+    title: "Modular Kitchens",
+    description: "Complete modular kitchen solutions with cabinets, shelving, and storage—designed with AI and built from recycled polymer panels for durability and sustainability",
     image: seatingImage,
   },
   {
-    id: "living",
-    title: "Living",
-    description: "Complete living room solutions from coffee tables to entertainment units—all made from eco-friendly recycled materials",
+    id: "modular-wardrobes",
+    title: "Modular Wardrobes & Storage",
+    description: "Customizable wardrobes, lofts, and storage units crafted from 100% recycled panels—fire retardant, termite-proof, and built to last",
     image: livingImage,
   },
   {
-    id: "bedroom",
-    title: "Bedroom",
-    description: "Beds, nightstands, and storage engineered from fire-safe recycled plastic for your perfect sanctuary",
+    id: "modular-beds",
+    title: "Modular Beds & Tables",
+    description: "Panel-based box beds, study tables, and workstations—modular designs that fit perfectly in your space",
     image: bedroomImage,
+  },
+  {
+    id: "modular-shelving",
+    title: "Modular Shelving & Units",
+    description: "Wall-mounted shelves, entertainment units, and display storage—all made from eco-friendly recycled polymer panels",
+    image: seatingImage,
   },
 ];
 
+const PRICE_PER_SQ_FT = 1115;
+
 const ProductCategories = () => {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState<typeof categories[0] | null>(null);
+  const [isSizeDialogOpen, setIsSizeDialogOpen] = useState(false);
+  const [actionType, setActionType] = useState<"cart" | "buy">("cart");
+
   const scrollToDesignStudio = () => {
     document.getElementById('design-studio')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleAddToCart = (category: typeof categories[0]) => {
+    setSelectedCategory(category);
+    setActionType("cart");
+    setIsSizeDialogOpen(true);
+  };
+
+  const handleBuyNow = (category: typeof categories[0]) => {
+    setSelectedCategory(category);
+    setActionType("buy");
+    setIsSizeDialogOpen(true);
+  };
+
+  const handleSizeConfirm = (dimensions: { height: number; depth: number; width: number }) => {
+    if (!selectedCategory) return;
+
+    // Calculate total area (simplified: H*W + 2*D*W for basic panel calculation)
+    const totalArea = (dimensions.height * dimensions.width) + (2 * dimensions.depth * dimensions.width);
+    const totalPrice = Math.round(totalArea * PRICE_PER_SQ_FT);
+
+    const cartItem = {
+      id: Date.now().toString(),
+      categoryId: selectedCategory.id,
+      categoryTitle: selectedCategory.title,
+      height: dimensions.height,
+      depth: dimensions.depth,
+      width: dimensions.width,
+      pricePerSqFt: PRICE_PER_SQ_FT,
+      totalPrice,
+      image: selectedCategory.image,
+    };
+
+    if (actionType === "cart") {
+      addToCart(cartItem);
+      toast.success("Added to Cart ✅", {
+        description: "Item added to your cart successfully",
+        action: {
+          label: "View Cart",
+          onClick: () => navigate("/cart"),
+        },
+      });
+    } else {
+      // Buy Now - add to cart and go to checkout
+      addToCart(cartItem);
+      navigate("/checkout");
+    }
   };
 
   return (
@@ -37,11 +103,11 @@ const ProductCategories = () => {
             EXPLORE CATEGORIES
           </p>
           <h2 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
-            Furniture For Every Space
+            Modular Furniture For Every Space
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {categories.map((category, index) => (
             <div
               key={category.id}
@@ -64,18 +130,42 @@ const ProductCategories = () => {
                 <p className="text-muted-foreground mb-6 text-sm">
                   {category.description}
                 </p>
-                <Button
-                  onClick={scrollToDesignStudio}
-                  variant="outline"
-                  className="w-fit transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary"
-                >
-                  Design Now
-                </Button>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    onClick={() => handleBuyNow(category)}
+                    className="w-full"
+                  >
+                    Buy Now
+                  </Button>
+                  <Button
+                    onClick={() => handleAddToCart(category)}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Add to Cart
+                  </Button>
+                  <Button
+                    onClick={scrollToDesignStudio}
+                    variant="ghost"
+                    className="w-full text-xs"
+                  >
+                    Or Design Custom
+                  </Button>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {selectedCategory && (
+        <SizeInputDialog
+          isOpen={isSizeDialogOpen}
+          onClose={() => setIsSizeDialogOpen(false)}
+          onConfirm={handleSizeConfirm}
+          categoryTitle={selectedCategory.title}
+        />
+      )}
     </section>
   );
 };

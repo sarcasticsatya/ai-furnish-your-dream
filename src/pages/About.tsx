@@ -13,15 +13,15 @@ const About = () => {
           
           <div className="prose prose-lg max-w-none">
             <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
-              Bytras is building the next evolution of furniture — AI-powered and made from 100% recycled plastic.
+              Bytras manufactures panel-based modular furniture — AI-powered and made from 100% recycled polymer panels.
             </p>
             
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              We help people design custom furniture perfectly tailored to their spaces while reducing plastic waste and replacing wood-based materials.
+              We design modular kitchens, wardrobes, lofts, beds, tables, and storage units perfectly tailored to your spaces while reducing plastic waste and replacing wood-based materials.
             </p>
             
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              From AI-generated concepts to precision manufacturing and final installation, Bytras blends technology, sustainability, and craftsmanship into a seamless experience.
+              From AI-generated concepts to precision-cut modular panels, assembled on-site with professional installation, Bytras blends technology, sustainability, and craftsmanship into a seamless experience.
             </p>
             
             <p className="text-lg text-muted-foreground mb-12 leading-relaxed">

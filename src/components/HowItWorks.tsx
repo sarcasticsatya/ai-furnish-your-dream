@@ -4,22 +4,22 @@ const steps = [
   {
     icon: Upload,
     title: "Upload Your Space",
-    description: "Share photos of your room—living room, bedroom, kitchen, or any space you want to transform.",
+    description: "Share photos of your room—kitchen, bedroom, or any space you want to transform with modular furniture.",
   },
   {
     icon: Sparkles,
     title: "Describe Your Vision",
-    description: "Tell our AI what you're looking for. Style, size, color—we'll generate 5 custom options crafted from 100% recycled, fire-safe plastic.",
+    description: "Tell our AI what panel-based modular furniture you need—kitchens, wardrobes, lofts, or storage. We'll generate custom designs from 100% recycled polymer panels.",
   },
   {
     icon: Package,
     title: "We Build & Ship",
-    description: "Choose your favorite design. We craft your custom furniture from recycled plastic with precision and ship it directly to you.",
+    description: "Choose your favorite design. We precision-cut modular panels from recycled polymer and ship directly to you.",
   },
   {
     icon: Home,
-    title: "Professional Installation",
-    description: "Our team arrives at your location and expertly installs your new furniture. Hassle-free, perfect fit.",
+    title: "On-Site Assembly",
+    description: "Our team arrives at your location and expertly assembles your modular furniture. Hassle-free, perfect fit.",
   },
 ];
 
@@ -35,7 +35,7 @@ const HowItWorks = () => {
             From Vision to Reality
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            We've reimagined the furniture buying experience. Four simple steps to custom furniture that perfectly fits your space and style.
+            We've reimagined the furniture buying experience. Four simple steps to panel-based modular furniture that perfectly fits your space and style.
           </p>
         </div>
 
