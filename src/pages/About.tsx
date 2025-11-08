@@ -2,19 +2,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-
 const About = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Header />
       <main className="py-24">
         <div className="container mx-auto px-4 max-w-4xl">
           <h1 className="text-5xl font-light text-foreground mb-8">About Bytras</h1>
           
           <div className="prose prose-lg max-w-none">
-            <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
-              Bytras manufactures panel-based modular furniture — AI-powered and made from 100% recycled polymer panels.
-            </p>
+            <p className="text-xl text-muted-foreground mb-6 leading-relaxed">Bytras manufactures modular furnitures, AI-Designed and made from 100% recycled polymer panels.</p>
             
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
               We design modular kitchens, wardrobes, lofts, beds, tables, and storage units perfectly tailored to your spaces while reducing plastic waste and replacing wood-based materials.
@@ -43,24 +39,10 @@ const About = () => {
               
               <div className="grid md:grid-cols-2 gap-8 mb-8">
                 <div className="aspect-video">
-                  <iframe
-                    className="w-full h-full rounded-lg"
-                    src="https://www.youtube.com/embed/c64H_FTGL04?autoplay=1&mute=1"
-                    title="Customer Testimonial 1"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                  <iframe className="w-full h-full rounded-lg" src="https://www.youtube.com/embed/c64H_FTGL04?autoplay=1&mute=1" title="Customer Testimonial 1" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                 </div>
                 <div className="aspect-video">
-                  <iframe
-                    className="w-full h-full rounded-lg"
-                    src="https://www.youtube.com/embed/0fGnw1wBxKI?autoplay=1&mute=1"
-                    title="Customer Testimonial 2"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                  <iframe className="w-full h-full rounded-lg" src="https://www.youtube.com/embed/0fGnw1wBxKI?autoplay=1&mute=1" title="Customer Testimonial 2" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                 </div>
               </div>
 
@@ -74,8 +56,6 @@ const About = () => {
         </div>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
