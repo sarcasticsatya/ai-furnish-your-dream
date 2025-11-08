@@ -61,7 +61,7 @@ const Pricing = () => {
             <ol className="space-y-3 text-muted-foreground">
               <li>1. Submit your design and requirements</li>
               <li>2. Our team reviews and provides a detailed quote</li>
-              <li>3. 50% advance payment to begin production</li>
+              <li>3. 30% advance payment to begin production and 20% after finalization of designs.</li>
               <li>4. Manufacturing and quality assurance</li>
               <li>5. Delivery and professional installation</li>
               <li>6. Remaining 50% payment after installation</li>
