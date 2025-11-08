@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Upload, Sparkles, RefreshCw } from "lucide-react";
+import { Upload, Sparkles, RefreshCw, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import logo from "@/assets/logo.jpg";
 
 const DesignStudio = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -75,6 +76,81 @@ const DesignStudio = () => {
     setGeneratedImage(null);
     setUploadedImage(null);
     setPrompt("");
+  };
+
+  const addWatermarkAndDownload = async () => {
+    if (!generatedImage) return;
+
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // Load the generated image
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = generatedImage;
+      
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      // Load and draw logo
+      const logoImg = new Image();
+      logoImg.src = logo;
+      await new Promise((resolve) => {
+        logoImg.onload = resolve;
+      });
+
+      const logoSize = Math.min(img.width, img.height) * 0.15;
+      const padding = 20;
+      ctx.globalAlpha = 0.8;
+      ctx.drawImage(logoImg, padding, padding, logoSize, logoSize);
+
+      // Add date watermark
+      ctx.globalAlpha = 0.7;
+      const fontSize = Math.max(16, img.width * 0.02);
+      ctx.font = `${fontSize}px Arial`;
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'right';
+      const dateText = `Created: ${new Date().toLocaleDateString()}`;
+      const textWidth = ctx.measureText(dateText).width;
+      const textX = img.width - padding;
+      const textY = img.height - padding;
+      
+      // Background for date text
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.fillRect(textX - textWidth - 10, textY - fontSize - 5, textWidth + 20, fontSize + 15);
+      
+      ctx.fillStyle = '#000000';
+      ctx.fillText(dateText, textX, textY);
+
+      // Download
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bytras-design-${Date.now()}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast({
+          title: "Download Started",
+          description: "Your design with watermark is being downloaded.",
+        });
+      }, 'image/png');
+    } catch (error) {
+      console.error("Watermark error:", error);
+      toast({
+        title: "Download Failed",
+        description: "Could not add watermark. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -156,6 +232,10 @@ const DesignStudio = () => {
               <div className="flex items-center justify-between">
                 <h3 className="text-2xl font-light">Your Custom Design</h3>
                 <div className="flex gap-2">
+                  <Button variant="outline" onClick={addWatermarkAndDownload} disabled={isGenerating}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Save Image
+                  </Button>
                   <Button variant="outline" onClick={handleRegenerate} disabled={isGenerating}>
                     <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
                     {isGenerating ? "Regenerating..." : "Regenerate"}
@@ -189,7 +269,7 @@ const DesignStudio = () => {
                         <p className="text-sm text-muted-foreground mb-4">
                           Made from 100% recycled plastic (PP) - Fire retardant & eco-friendly
                         </p>
-                        <Button className="w-full sm:w-auto">
+                        <Button className="w-full sm:w-auto" onClick={() => window.location.href = '/contact'}>
                           Request Quote
                         </Button>
                       </div>
