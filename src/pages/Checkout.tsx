@@ -8,9 +8,10 @@ import { useCart } from "@/contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Trash2 } from "lucide-react";
 
 const Checkout = () => {
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, updateQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
@@ -265,11 +266,38 @@ const Checkout = () => {
                     <img src={item.image} alt={item.categoryTitle} className="w-20 h-20 object-cover rounded" />
                     <div className="flex-1">
                       <h3 className="font-medium text-foreground">{item.categoryTitle}</h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground mb-2">
                         {item.height}ft × {item.depth}ft × {item.width}ft
                       </p>
-                      <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">Qty:</span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        >
+                          -
+                        </Button>
+                        <span className="w-10 text-center font-medium">{item.quantity}</span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        >
+                          +
+                        </Button>
+                      </div>
                     </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeFromCart(item.id)}
+                      className="h-8 w-8"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 ))}
               </div>
