@@ -14,7 +14,7 @@ const Hero = () => {
           DESIGNED FOR YOUR SPACE
         </h1>
         
-        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">Upload your room. Describe your vision. Get panel-based modular furniture—kitchens, wardrobes, lofts, beds, and storage—crafted from 100% recycled polymer panels, engineered to be fire retardant and smoke suppressant.</p>
+        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">Upload your room. Describe your vision. Get modular—kitchens, wardrobes, lofts, beds, and storage, crafted from 100% recycled polymer panels designed, built and installed to your style.</p>
         
         <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => document.getElementById('design-studio')?.scrollIntoView({
         behavior: 'smooth'

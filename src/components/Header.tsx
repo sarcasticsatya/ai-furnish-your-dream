@@ -4,17 +4,16 @@ import { Link } from "react-router-dom";
 import logo from "@/assets/logo.jpg";
 import { useCart } from "@/contexts/CartContext";
 import { Badge } from "@/components/ui/badge";
-
 const Header = () => {
-  const { getCartCount } = useCart();
+  const {
+    getCartCount
+  } = useCart();
   const cartCount = getCartCount();
-
-  return (
-    <header className="border-b border-border bg-background sticky top-0 z-50">
+  return <header className="border-b border-border bg-background sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="Bytras Logo" className="h-10 w-auto" />
+            
             <span className="text-2xl font-bold tracking-tight text-foreground">BYTRAS</span>
           </Link>
           
@@ -52,21 +51,14 @@ const Header = () => {
             <Link to="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
-                  <Badge 
-                    variant="destructive" 
-                    className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
-                  >
+                {cartCount > 0 && <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
                     {cartCount}
-                  </Badge>
-                )}
+                  </Badge>}
               </Button>
             </Link>
           </div>
         </div>
       </div>
-    </header>
-  );
+    </header>;
 };
-
 export default Header;
