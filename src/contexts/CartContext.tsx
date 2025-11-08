@@ -7,8 +7,7 @@ export interface CartItem {
   height: number;
   depth: number;
   width: number;
-  pricePerSqFt: number;
-  totalPrice: number;
+  quantity: number;
   image: string;
 }
 
@@ -16,8 +15,8 @@ interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
-  getCartTotal: () => number;
   getCartCount: () => number;
 }
 
@@ -30,7 +29,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const addToCart = (item: CartItem) => {
-    const updatedCart = [...cart, { ...item, id: Date.now().toString() }];
+    const updatedCart = [...cart, { ...item, id: Date.now().toString(), quantity: 1 }];
     setCart(updatedCart);
     localStorage.setItem('bytras-cart', JSON.stringify(updatedCart));
   };
@@ -41,17 +40,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('bytras-cart', JSON.stringify(updatedCart));
   };
 
+  const updateQuantity = (id: string, quantity: number) => {
+    if (quantity < 1) return;
+    const updatedCart = cart.map((item) =>
+      item.id === id ? { ...item, quantity } : item
+    );
+    setCart(updatedCart);
+    localStorage.setItem('bytras-cart', JSON.stringify(updatedCart));
+  };
+
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem('bytras-cart');
   };
 
-  const getCartTotal = () => {
-    return cart.reduce((total, item) => total + item.totalPrice, 0);
-  };
-
   const getCartCount = () => {
-    return cart.length;
+    return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
   return (
@@ -60,8 +64,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         cart,
         addToCart,
         removeFromCart,
+        updateQuantity,
         clearCart,
-        getCartTotal,
         getCartCount,
       }}
     >

@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const Checkout = () => {
-  const { cart, getCartTotal, clearCart } = useCart();
+  const { cart, clearCart } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
@@ -48,7 +48,6 @@ const Checkout = () => {
   };
 
   const handlePlaceOrder = async () => {
-    const total = getCartTotal();
     const formData = {
       name,
       phone,
@@ -58,14 +57,8 @@ const Checkout = () => {
       items: cart.map(item => ({
         category: item.categoryTitle,
         dimensions: `${item.height}ft × ${item.depth}ft × ${item.width}ft`,
-        area: (item.height * item.width * item.depth).toFixed(2),
-        price: item.totalPrice
-      })),
-      subtotal: total,
-      advance_30: (total * 0.3).toFixed(2),
-      design_20: (total * 0.2).toFixed(2),
-      installation_50: (total * 0.5).toFixed(2),
-      total: total
+        quantity: item.quantity
+      }))
     };
 
     // Validate phone (10 digits)
@@ -75,7 +68,7 @@ const Checkout = () => {
     }
 
     try {
-      const response = await fetch("https://formspree.io/f/xdkogevr", {
+      const response = await fetch("https://formspree.io/f/xpwkarpw", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -257,7 +250,7 @@ const Checkout = () => {
           {/* Step 3: Review & Confirm */}
           {step === 3 && (
             <div className="space-y-6">
-              <div className="bg-card border border-border rounded-lg p-8">
+               <div className="bg-card border border-border rounded-lg p-8">
                 <h2 className="text-2xl font-light text-foreground mb-6">Order Summary</h2>
                 
                 {cart.map((item) => (
@@ -272,28 +265,12 @@ const Checkout = () => {
                       <p className="text-sm text-muted-foreground">
                         {item.height}ft × {item.depth}ft × {item.width}ft
                       </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-foreground">₹{item.totalPrice.toLocaleString()}</p>
-                      <p className="text-xs text-muted-foreground">₹{item.pricePerSqFt}/sq ft</p>
+                      <p className="text-sm text-muted-foreground">
+                        Quantity: {item.quantity}
+                      </p>
                     </div>
                   </div>
                 ))}
-
-                <div className="mt-6 pt-6 border-t border-border space-y-2">
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Subtotal</span>
-                    <span>₹{getCartTotal().toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Delivery Charges</span>
-                    <span>Location-based (TBD)</span>
-                  </div>
-                  <div className="flex justify-between text-lg font-medium text-foreground pt-2">
-                    <span>Estimated Total</span>
-                    <span>₹{getCartTotal().toLocaleString()}</span>
-                  </div>
-                </div>
               </div>
 
               <div className="bg-card border border-border rounded-lg p-8">
@@ -329,24 +306,9 @@ const Checkout = () => {
               </div>
 
               <div className="bg-accent/20 border border-border rounded-lg p-6">
-                <h3 className="font-medium text-foreground mb-3">Payment Breakdown</h3>
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">30% Advance (After Confirmation)</span>
-                    <span className="text-foreground font-medium">₹{(getCartTotal() * 0.3).toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">20% Design Finalization</span>
-                    <span className="text-foreground font-medium">₹{(getCartTotal() * 0.2).toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">50% After Installation</span>
-                    <span className="text-foreground font-medium">₹{(getCartTotal() * 0.5).toLocaleString()}</span>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  No payment required now. Our team will contact you within 12 hours to confirm your design 
-                  and send payment link for the advance.
+                <p className="text-sm text-muted-foreground">
+                  Our team will contact you within 12 hours to confirm your design, 
+                  provide a detailed quote, and guide you through the next steps.
                 </p>
               </div>
 

@@ -6,7 +6,7 @@ import { Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
-  const { cart, removeFromCart, getCartTotal, clearCart } = useCart();
+  const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
 
   if (cart.length === 0) {
     return (
@@ -53,14 +53,28 @@ const Cart = () => {
                       <p className="text-sm text-muted-foreground mb-2">
                         Dimensions: {item.height}ft (H) × {item.depth}ft (D) × {item.width}ft (W)
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        Area: {(item.height * item.width * item.depth).toFixed(2)} cubic ft @ ₹{item.pricePerSqFt}/sq ft
-                      </p>
+                      <div className="flex items-center gap-2 mt-3">
+                        <span className="text-sm text-muted-foreground">Quantity:</span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        >
+                          -
+                        </Button>
+                        <span className="w-12 text-center font-medium">{item.quantity}</span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        >
+                          +
+                        </Button>
+                      </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-light text-foreground mb-4">
-                        ₹{item.totalPrice.toLocaleString()}
-                      </p>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -80,39 +94,13 @@ const Cart = () => {
                 
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Subtotal</span>
-                    <span>₹{getCartTotal().toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Delivery Charges</span>
-                    <span>Location-based (TBD)</span>
-                  </div>
-                  <div className="border-t border-border pt-3 flex justify-between text-lg font-medium text-foreground">
-                    <span>Total</span>
-                    <span>₹{getCartTotal().toLocaleString()}</span>
-                  </div>
-                </div>
-
-                <div className="bg-accent/20 border border-border rounded-lg p-4 mb-6">
-                  <h3 className="font-medium text-foreground mb-3 text-sm">Payment Breakdown</h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>30% Advance (Now)</span>
-                      <span>₹{(getCartTotal() * 0.3).toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>20% Design Finalization</span>
-                      <span>₹{(getCartTotal() * 0.2).toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>50% After Installation</span>
-                      <span>₹{(getCartTotal() * 0.5).toLocaleString()}</span>
-                    </div>
+                    <span>Total Items</span>
+                    <span>{cart.reduce((total, item) => total + item.quantity, 0)}</span>
                   </div>
                 </div>
 
                 <p className="text-xs text-muted-foreground mb-6">
-                  *Final price will be confirmed after our team reviews your requirements
+                  *Our team will contact you with a detailed quote after reviewing your requirements
                 </p>
 
                 <Link to="/checkout">

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import SizeInputDialog from "./SizeInputDialog";
 import modularKitchen from "@/assets/modular-kitchen.jpg";
 import modularWardrobe from "@/assets/modular-wardrobe.jpg";
+import modularBedsTablesImg from "@/assets/modular-beds-tables.jpg";
 import modularShelving from "@/assets/modular-shelving.jpg";
 
 const categories = [
@@ -22,10 +23,10 @@ const categories = [
     image: modularWardrobe,
   },
   {
-    id: "modular-beds",
+    id: "beds-tables",
     title: "Modular Beds & Tables",
     description: "Panel-based box beds, study tables, and workstations—modular designs that fit perfectly in your space",
-    image: modularKitchen,
+    image: modularBedsTablesImg,
   },
   {
     id: "modular-shelving",
@@ -34,8 +35,6 @@ const categories = [
     image: modularShelving,
   },
 ];
-
-const PRICE_PER_SQ_FT = 1115;
 
 const ProductCategories = () => {
   const { addToCart } = useCart();
@@ -63,19 +62,14 @@ const ProductCategories = () => {
   const handleSizeConfirm = (dimensions: { height: number; depth: number; width: number }) => {
     if (!selectedCategory) return;
 
-    // Calculate total area as Height × Width × Depth
-    const totalArea = dimensions.height * dimensions.width * dimensions.depth;
-    const totalPrice = Math.round(totalArea * PRICE_PER_SQ_FT);
-
     const cartItem = {
-      id: Date.now().toString(),
+      id: "", // Will be set by CartContext
       categoryId: selectedCategory.id,
       categoryTitle: selectedCategory.title,
       height: dimensions.height,
       depth: dimensions.depth,
       width: dimensions.width,
-      pricePerSqFt: PRICE_PER_SQ_FT,
-      totalPrice,
+      quantity: 1,
       image: selectedCategory.image,
     };
 
