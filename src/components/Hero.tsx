@@ -8,9 +8,7 @@ const Hero = () => {
           AI-POWERED MODULAR FURNITURE
         </p>
         
-        <h1 className="text-5xl md:text-7xl font-light tracking-tight text-foreground mb-6">
-          MODULAR FURNITURE
-          <br />
+        <h1 className="text-5xl md:text-7xl font-light tracking-tight text-foreground mb-6">MODULAR FURNITUREDESIGNED FOR YOUR SPACE - BY YOU.<br />
           DESIGNED FOR YOUR SPACE
         </h1>
         
