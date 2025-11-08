@@ -191,7 +191,7 @@ const DesignStudio = () => {
               <Card className="p-8">
                 <h3 className="text-xl font-medium mb-4">Describe Your Vision</h3>
                 <Textarea
-                  placeholder="Example: Design a modern Wardrobe in teakwood color with brass handles ..."
+                  placeholder="Example: Design a modern Wardrobe in teak wood color with brass handles ..."
                   className="min-h-[120px] mb-4"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
