@@ -4,7 +4,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           <div>
             <h3 className="text-2xl font-bold mb-6">BYTRAS</h3>
-            <p className="text-background/70 text-sm leading-relaxed">Custom furniture designed, built, and installed.</p>
+            <p className="text-background/70 text-sm leading-relaxed">​The Future of Furniture.</p>
           </div>
 
           <div>
