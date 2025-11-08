@@ -36,13 +36,13 @@ const DesignStudio = () => {
     }
 
     setIsGenerating(true);
-    
+
     try {
-      const { data, error } = await supabase.functions.invoke('generate-furniture-design', {
-        body: { 
+      const { data, error } = await supabase.functions.invoke("generate-furniture-design", {
+        body: {
           imageBase64: uploadedImage,
-          prompt: prompt 
-        }
+          prompt: prompt,
+        },
       });
 
       if (error) throw error;
@@ -82,15 +82,15 @@ const DesignStudio = () => {
     if (!generatedImage) return;
 
     try {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
       // Load the generated image
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.src = generatedImage;
-      
+
       await new Promise((resolve) => {
         img.onload = resolve;
       });
@@ -115,25 +115,25 @@ const DesignStudio = () => {
       ctx.globalAlpha = 0.7;
       const fontSize = Math.max(16, img.width * 0.02);
       ctx.font = `${fontSize}px Arial`;
-      ctx.fillStyle = '#000000';
-      ctx.textAlign = 'right';
+      ctx.fillStyle = "#000000";
+      ctx.textAlign = "right";
       const dateText = `Created: ${new Date().toLocaleDateString()}`;
       const textWidth = ctx.measureText(dateText).width;
       const textX = img.width - padding;
       const textY = img.height - padding;
-      
+
       // Background for date text
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
       ctx.fillRect(textX - textWidth - 10, textY - fontSize - 5, textWidth + 20, fontSize + 15);
-      
-      ctx.fillStyle = '#000000';
+
+      ctx.fillStyle = "#000000";
       ctx.fillText(dateText, textX, textY);
 
       // Download
       canvas.toBlob((blob) => {
         if (!blob) return;
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
         a.download = `bytras-design-${Date.now()}.png`;
         a.click();
@@ -142,7 +142,7 @@ const DesignStudio = () => {
           title: "Download Started",
           description: "Your design with watermark is being downloaded.",
         });
-      }, 'image/png');
+      }, "image/png");
     } catch (error) {
       console.error("Watermark error:", error);
       toast({
@@ -157,12 +157,8 @@ const DesignStudio = () => {
     <section className="py-24 bg-muted" id="design-studio">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <p className="text-sm tracking-[0.3em] text-muted-foreground mb-4">
-            DESIGN STUDIO
-          </p>
-          <h2 className="text-4xl md:text-5xl font-light text-foreground mb-4">
-            Create Your Custom Furniture
-          </h2>
+          <p className="text-sm tracking-[0.3em] text-muted-foreground mb-4">DESIGN STUDIO</p>
+          <h2 className="text-4xl md:text-5xl font-light text-foreground mb-4">Create Your Custom Furniture</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Upload your space and let AI design furniture that perfectly matches your style and requirements.
           </p>
@@ -176,33 +172,17 @@ const DesignStudio = () => {
                 <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
                   {uploadedImage ? (
                     <div className="space-y-4 animate-scale-in">
-                      <img
-                        src={uploadedImage}
-                        alt="Uploaded space"
-                        className="max-h-64 mx-auto rounded"
-                      />
-                      <Button
-                        variant="secondary"
-                        onClick={() => setUploadedImage(null)}
-                      >
+                      <img src={uploadedImage} alt="Uploaded space" className="max-h-64 mx-auto rounded" />
+                      <Button variant="secondary" onClick={() => setUploadedImage(null)}>
                         Change Image
                       </Button>
                     </div>
                   ) : (
                     <label className="cursor-pointer">
                       <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                      <p className="text-muted-foreground mb-2">
-                        Click to upload or drag and drop
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        PNG, JPG up to 10MB
-                      </p>
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                      />
+                      <p className="text-muted-foreground mb-2">Click to upload or drag and drop</p>
+                      <p className="text-sm text-muted-foreground">PNG, JPG up to 10MB</p>
+                      <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
                     </label>
                   )}
                 </div>
@@ -211,7 +191,7 @@ const DesignStudio = () => {
               <Card className="p-8">
                 <h3 className="text-xl font-medium mb-4">Describe Your Vision</h3>
                 <Textarea
-                  placeholder="Example: I want a modern L-shaped sofa in gray fabric with clean lines, around 8 feet long, with built-in storage..."
+                  placeholder="Example: I want a modern Wardrobe in gray fabric with clean lines, around 8 feet long, with built-in storage..."
                   className="min-h-[120px] mb-4"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
@@ -237,7 +217,7 @@ const DesignStudio = () => {
                     Save Image
                   </Button>
                   <Button variant="outline" onClick={handleRegenerate} disabled={isGenerating}>
-                    <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? "animate-spin" : ""}`} />
                     {isGenerating ? "Regenerating..." : "Regenerate"}
                   </Button>
                   <Button variant="ghost" onClick={handleStartOver}>
@@ -251,25 +231,19 @@ const DesignStudio = () => {
                   <div className="aspect-[4/3] bg-secondary relative">
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <Sparkles className="w-16 h-16 text-primary animate-pulse mb-4" />
-                      <p className="text-muted-foreground animate-fade-in">
-                        Creating your custom furniture design...
-                      </p>
+                      <p className="text-muted-foreground animate-fade-in">Creating your custom furniture design...</p>
                     </div>
                   </div>
                 ) : (
                   <div className="relative group">
-                    <img
-                      src={generatedImage}
-                      alt="Generated furniture design"
-                      className="w-full h-auto"
-                    />
+                    <img src={generatedImage} alt="Generated furniture design" className="w-full h-auto" />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
                       <div className="text-left">
                         <h4 className="text-xl font-medium text-foreground mb-2">Your Custom Design</h4>
                         <p className="text-sm text-muted-foreground mb-4">
                           Made from 100% recycled plastic (PP) - Fire retardant & eco-friendly
                         </p>
-                        <Button className="w-full sm:w-auto" onClick={() => window.location.href = '/contact'}>
+                        <Button className="w-full sm:w-auto" onClick={() => (window.location.href = "/contact")}>
                           Request Quote
                         </Button>
                       </div>
