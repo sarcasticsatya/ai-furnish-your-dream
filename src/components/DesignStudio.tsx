@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const DesignStudio = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
-  const [showResults, setShowResults] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
@@ -23,36 +24,57 @@ const DesignStudio = () => {
     }
   };
 
-  const handleGenerate = () => {
-    if (uploadedImage && prompt) {
-      setIsGenerating(true);
-      setTimeout(() => {
-        setIsGenerating(false);
-        setShowResults(true);
-        toast({
-          title: "Designs Generated!",
-          description: "5 custom furniture options are ready for you.",
-        });
-      }, 2000);
+  const handleGenerate = async () => {
+    if (!uploadedImage || !prompt) {
+      toast({
+        title: "Missing Information",
+        description: "Please upload an image and provide a design prompt.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-furniture-design', {
+        body: { 
+          imageBase64: uploadedImage,
+          prompt: prompt 
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      setGeneratedImage(data.imageUrl);
+      toast({
+        title: "Design Generated!",
+        description: "Your custom furniture design is ready.",
+      });
+    } catch (error) {
+      console.error("Generation error:", error);
+      toast({
+        title: "Generation Failed",
+        description: error instanceof Error ? error.message : "Failed to generate design. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  const handleRegenerate = () => {
-    setIsGenerating(true);
-    setTimeout(() => {
-      setIsGenerating(false);
-      toast({
-        title: "Designs Regenerated!",
-        description: "New furniture options have been created.",
-      });
-    }, 2000);
+  const handleRegenerate = async () => {
+    await handleGenerate();
   };
 
-  const handleSelectOrder = (designNumber: number) => {
-    toast({
-      title: "Added to Cart",
-      description: `Design ${designNumber} has been added to your cart.`,
-    });
+  const handleStartOver = () => {
+    setGeneratedImage(null);
+    setUploadedImage(null);
+    setPrompt("");
   };
 
   return (
@@ -71,13 +93,13 @@ const DesignStudio = () => {
         </div>
 
         <div className="max-w-4xl mx-auto">
-          {!showResults ? (
-            <div className="space-y-8">
+          {!generatedImage ? (
+            <div className="space-y-8 animate-fade-in">
               <Card className="p-8">
                 <h3 className="text-xl font-medium mb-4">Upload Your Space</h3>
                 <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
                   {uploadedImage ? (
-                    <div className="space-y-4">
+                    <div className="space-y-4 animate-scale-in">
                       <img
                         src={uploadedImage}
                         alt="Uploaded space"
@@ -125,53 +147,64 @@ const DesignStudio = () => {
                   disabled={!uploadedImage || !prompt || isGenerating}
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
-                  {isGenerating ? "Generating..." : "Generate Designs"}
+                  {isGenerating ? "Generating Your Design..." : "Generate Design"}
                 </Button>
               </Card>
             </div>
           ) : (
-            <div className="space-y-8">
+            <div className="space-y-8 animate-fade-in">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-light">Your Custom Designs</h3>
-                <Button variant="outline" onClick={handleRegenerate} disabled={isGenerating}>
-                  <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
-                  {isGenerating ? "Regenerating..." : "Regenerate All"}
-                </Button>
+                <h3 className="text-2xl font-light">Your Custom Design</h3>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={handleRegenerate} disabled={isGenerating}>
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
+                    {isGenerating ? "Regenerating..." : "Regenerate"}
+                  </Button>
+                  <Button variant="ghost" onClick={handleStartOver}>
+                    Start Over
+                  </Button>
+                </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Card key={i} className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow">
-                    <div className="aspect-[4/3] bg-secondary relative">
-                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                        Design Option {i}
+              <Card className="overflow-hidden animate-scale-in">
+                {isGenerating ? (
+                  <div className="aspect-[4/3] bg-secondary relative">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <Sparkles className="w-16 h-16 text-primary animate-pulse mb-4" />
+                      <p className="text-muted-foreground animate-fade-in">
+                        Creating your custom furniture design...
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative group">
+                    <img
+                      src={generatedImage}
+                      alt="Generated furniture design"
+                      className="w-full h-auto"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                      <div className="text-left">
+                        <h4 className="text-xl font-medium text-foreground mb-2">Your Custom Design</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Made from 100% recycled plastic (PP) - Fire retardant & eco-friendly
+                        </p>
+                        <Button className="w-full sm:w-auto">
+                          Request Quote
+                        </Button>
                       </div>
                     </div>
-                    <div className="p-4">
-                      <h4 className="font-medium mb-2">Modern Design {i}</h4>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Custom crafted to match your space
-                      </p>
-                      <Button 
-                        className="w-full" 
-                        variant="outline"
-                        onClick={() => handleSelectOrder(i)}
-                      >
-                        Select & Order
-                      </Button>
-                    </div>
-                  </Card>
-                ))}
-              </div>
+                  </div>
+                )}
+              </Card>
 
-              <div className="text-center">
-                <Button
-                  variant="ghost"
-                  onClick={() => setShowResults(false)}
-                >
-                  Start Over
-                </Button>
-              </div>
+              {!isGenerating && (
+                <div className="text-center animate-fade-in">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Love this design? Our team will craft it from sustainable recycled materials.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
