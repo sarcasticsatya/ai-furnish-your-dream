@@ -21,7 +21,7 @@ const Pricing = () => {
 
           <Card className="p-12 text-center mb-8">
             <div className="mb-8">
-              <div className="text-6xl font-bold text-accent mb-4">₹1,299</div>
+              <div className="text-6xl font-bold text-accent mb-4">₹1,199</div>
               <div className="text-2xl text-muted-foreground">
                 per square foot
               </div>
