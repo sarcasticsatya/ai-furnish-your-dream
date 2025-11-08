@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import SizeInputDialog from "./SizeInputDialog";
 import modularKitchen from "@/assets/modular-kitchen.jpg";
 import modularWardrobe from "@/assets/modular-wardrobe.jpg";
-import modularBedsTablesImg from "@/assets/modular-beds-tables.jpg";
+import modularBed from "@/assets/modular-bed.jpg";
 import modularShelving from "@/assets/modular-shelving.jpg";
 
 const categories = [
@@ -26,7 +26,7 @@ const categories = [
     id: "beds-tables",
     title: "Modular Beds & Tables",
     description: "Panel-based box beds, study tables, and workstations—modular designs that fit perfectly in your space",
-    image: modularBedsTablesImg,
+    image: modularBed,
   },
   {
     id: "modular-shelving",
