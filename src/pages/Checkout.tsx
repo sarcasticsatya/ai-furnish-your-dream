@@ -52,28 +52,28 @@ const Checkout = () => {
       name,
       phone,
       email,
-      address: `${address}, ${city} - ${pincode}${landmark ? `, Near ${landmark}` : ''}`,
+      address: `${address}, ${city} - ${pincode}${landmark ? `, Near ${landmark}` : ""}`,
       locationType,
-      items: cart.map(item => ({
+      items: cart.map((item) => ({
         category: item.categoryTitle,
         dimensions: `${item.height}ft × ${item.depth}ft × ${item.width}ft`,
-        quantity: item.quantity
-      }))
+        quantity: item.quantity,
+      })),
     };
 
     // Validate phone (10 digits)
-    if (phone.replace(/\D/g, '').length !== 10) {
+    if (phone.replace(/\D/g, "").length !== 10) {
       toast.error("Please enter a valid 10-digit phone number");
       return;
     }
 
     try {
-      const response = await fetch("https://formspree.io/f/xqawzbqn", {
+      const response = await fetch("https://formspree.io/f/mldarnnv", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          _subject: "New Order Submission - Bytras"
+          _subject: "New Order Submission - Bytras",
         }),
       });
 
@@ -102,24 +102,30 @@ const Checkout = () => {
           {/* Progress Steps */}
           <div className="flex items-center justify-between mb-12">
             <div className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              >
                 1
               </div>
-              <span className={step >= 1 ? 'text-foreground' : 'text-muted-foreground'}>Location</span>
+              <span className={step >= 1 ? "text-foreground" : "text-muted-foreground"}>Location</span>
             </div>
             <div className="flex-1 h-0.5 bg-border mx-4" />
             <div className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              >
                 2
               </div>
-              <span className={step >= 2 ? 'text-foreground' : 'text-muted-foreground'}>Contact</span>
+              <span className={step >= 2 ? "text-foreground" : "text-muted-foreground"}>Contact</span>
             </div>
             <div className="flex-1 h-0.5 bg-border mx-4" />
             <div className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              >
                 3
               </div>
-              <span className={step >= 3 ? 'text-foreground' : 'text-muted-foreground'}>Review</span>
+              <span className={step >= 3 ? "text-foreground" : "text-muted-foreground"}>Review</span>
             </div>
           </div>
 
@@ -127,7 +133,7 @@ const Checkout = () => {
           {step === 1 && (
             <div className="bg-card border border-border rounded-lg p-8">
               <h2 className="text-2xl font-light text-foreground mb-6">Location Details</h2>
-              
+
               <div className="grid gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="address">Address *</Label>
@@ -142,12 +148,7 @@ const Checkout = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="city">City *</Label>
-                    <Input
-                      id="city"
-                      placeholder="City"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                    />
+                    <Input id="city" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="pincode">Pincode *</Label>
@@ -175,15 +176,21 @@ const Checkout = () => {
                   <RadioGroup value={locationType} onValueChange={setLocationType}>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="home" id="home" />
-                      <Label htmlFor="home" className="font-normal cursor-pointer">Home</Label>
+                      <Label htmlFor="home" className="font-normal cursor-pointer">
+                        Home
+                      </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="office" id="office" />
-                      <Label htmlFor="office" className="font-normal cursor-pointer">Office</Label>
+                      <Label htmlFor="office" className="font-normal cursor-pointer">
+                        Office
+                      </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="other" id="other" />
-                      <Label htmlFor="other" className="font-normal cursor-pointer">Other</Label>
+                      <Label htmlFor="other" className="font-normal cursor-pointer">
+                        Other
+                      </Label>
                     </div>
                   </RadioGroup>
                 </div>
@@ -199,7 +206,7 @@ const Checkout = () => {
           {step === 2 && (
             <div className="bg-card border border-border rounded-lg p-8">
               <h2 className="text-2xl font-light text-foreground mb-6">Contact Details</h2>
-              
+
               <div className="grid gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="name">Full Name *</Label>
@@ -250,24 +257,18 @@ const Checkout = () => {
           {/* Step 3: Review & Confirm */}
           {step === 3 && (
             <div className="space-y-6">
-               <div className="bg-card border border-border rounded-lg p-8">
+              <div className="bg-card border border-border rounded-lg p-8">
                 <h2 className="text-2xl font-light text-foreground mb-6">Order Summary</h2>
-                
+
                 {cart.map((item) => (
                   <div key={item.id} className="flex gap-4 mb-4 pb-4 border-b border-border last:border-0">
-                    <img
-                      src={item.image}
-                      alt={item.categoryTitle}
-                      className="w-20 h-20 object-cover rounded"
-                    />
+                    <img src={item.image} alt={item.categoryTitle} className="w-20 h-20 object-cover rounded" />
                     <div className="flex-1">
                       <h3 className="font-medium text-foreground">{item.categoryTitle}</h3>
                       <p className="text-sm text-muted-foreground">
                         {item.height}ft × {item.depth}ft × {item.width}ft
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        Quantity: {item.quantity}
-                      </p>
+                      <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
                     </div>
                   </div>
                 ))}
@@ -278,7 +279,9 @@ const Checkout = () => {
                 <div className="space-y-3 text-sm">
                   <div>
                     <span className="text-muted-foreground">Address: </span>
-                    <span className="text-foreground">{address}, {city} - {pincode}</span>
+                    <span className="text-foreground">
+                      {address}, {city} - {pincode}
+                    </span>
                   </div>
                   {landmark && (
                     <div>
@@ -307,8 +310,8 @@ const Checkout = () => {
 
               <div className="bg-accent/20 border border-border rounded-lg p-6">
                 <p className="text-sm text-muted-foreground">
-                  Our team will contact you within 12 hours to confirm your design, 
-                  provide a detailed quote, and guide you through the next steps.
+                  Our team will contact you within 12 hours to confirm your design, provide a detailed quote, and guide
+                  you through the next steps.
                 </p>
               </div>
 
