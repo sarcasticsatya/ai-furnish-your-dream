@@ -4,18 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
-
 const Pricing = () => {
-  const includes = [
-    "Premium recycled-polymer material",
-    "Precision fabrication",
-    "Professional finishing",
-    "Assembly and quality checks",
-    "Customization as per your design"
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const includes = ["Premium recycled-polymer material", "Precision fabrication", "Professional finishing", "Assembly and quality checks", "Customization as per your design"];
+  return <div className="min-h-screen bg-background">
       <Header />
       <main className="py-24">
         <div className="container mx-auto px-4 max-w-4xl">
@@ -30,9 +21,7 @@ const Pricing = () => {
 
           <Card className="p-12 text-center mb-8">
             <div className="mb-8">
-              <div className="text-6xl font-bold text-accent mb-4">
-                ₹1,115
-              </div>
+              <div className="text-6xl font-bold text-accent mb-4">₹1,299</div>
               <div className="text-2xl text-muted-foreground">
                 per square foot
               </div>
@@ -47,12 +36,10 @@ const Pricing = () => {
                 This pricing includes:
               </h3>
               <ul className="space-y-4 text-left max-w-md mx-auto">
-                {includes.map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
+                {includes.map((item, index) => <li key={index} className="flex items-start gap-3">
                     <CheckCircle2 className="h-6 w-6 text-accent flex-shrink-0 mt-0.5" />
                     <span className="text-muted-foreground text-lg">{item}</span>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
             </div>
 
@@ -83,8 +70,6 @@ const Pricing = () => {
         </div>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Pricing;
