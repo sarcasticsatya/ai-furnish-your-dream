@@ -54,7 +54,7 @@ const Cart = () => {
                         Dimensions: {item.height}ft (H) × {item.depth}ft (D) × {item.width}ft (W)
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Area: {((item.height * item.width) + (item.depth * item.width) * 2).toFixed(2)} sq ft
+                        Area: {(item.height * item.width * item.depth).toFixed(2)} cubic ft @ ₹{item.pricePerSqFt}/sq ft
                       </p>
                     </div>
                     <div className="text-right">
@@ -85,11 +85,29 @@ const Cart = () => {
                   </div>
                   <div className="flex justify-between text-muted-foreground">
                     <span>Delivery Charges</span>
-                    <span>TBD</span>
+                    <span>Location-based (TBD)</span>
                   </div>
                   <div className="border-t border-border pt-3 flex justify-between text-lg font-medium text-foreground">
                     <span>Total</span>
                     <span>₹{getCartTotal().toLocaleString()}</span>
+                  </div>
+                </div>
+
+                <div className="bg-accent/20 border border-border rounded-lg p-4 mb-6">
+                  <h3 className="font-medium text-foreground mb-3 text-sm">Payment Breakdown</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>30% Advance (Now)</span>
+                      <span>₹{(getCartTotal() * 0.3).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>20% Design Finalization</span>
+                      <span>₹{(getCartTotal() * 0.2).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>50% After Installation</span>
+                      <span>₹{(getCartTotal() * 0.5).toLocaleString()}</span>
+                    </div>
                   </div>
                 </div>
 

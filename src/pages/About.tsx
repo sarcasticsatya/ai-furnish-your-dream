@@ -36,6 +36,40 @@ const About = () => {
                 <Button size="lg" variant="outline">Partner With Us</Button>
               </Link>
             </div>
+
+            {/* Testimonials Section */}
+            <div className="mt-20 pt-12 border-t border-border">
+              <h2 className="text-3xl font-light text-foreground mb-8">What Our Customers Say</h2>
+              
+              <div className="grid md:grid-cols-2 gap-8 mb-8">
+                <div className="aspect-video">
+                  <iframe
+                    className="w-full h-full rounded-lg"
+                    src="https://www.youtube.com/embed/c64H_FTGL04?autoplay=1&mute=1"
+                    title="Customer Testimonial 1"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                <div className="aspect-video">
+                  <iframe
+                    className="w-full h-full rounded-lg"
+                    src="https://www.youtube.com/embed/0fGnw1wBxKI?autoplay=1&mute=1"
+                    title="Customer Testimonial 2"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </div>
+
+              <div className="bg-accent/20 border border-border rounded-lg p-6 text-center">
+                <p className="text-lg text-foreground font-medium">
+                  🌟 Currently serving customers across Karnataka only
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </main>

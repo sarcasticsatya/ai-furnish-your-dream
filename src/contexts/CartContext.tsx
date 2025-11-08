@@ -24,18 +24,26 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    const savedCart = localStorage.getItem('bytras-cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
 
   const addToCart = (item: CartItem) => {
-    setCart((prev) => [...prev, { ...item, id: Date.now().toString() }]);
+    const updatedCart = [...cart, { ...item, id: Date.now().toString() }];
+    setCart(updatedCart);
+    localStorage.setItem('bytras-cart', JSON.stringify(updatedCart));
   };
 
   const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+    const updatedCart = cart.filter((item) => item.id !== id);
+    setCart(updatedCart);
+    localStorage.setItem('bytras-cart', JSON.stringify(updatedCart));
   };
 
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem('bytras-cart');
   };
 
   const getCartTotal = () => {

@@ -4,34 +4,34 @@ import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import SizeInputDialog from "./SizeInputDialog";
-import seatingImage from "@/assets/seating-hero.jpg";
-import livingImage from "@/assets/living-hero.jpg";
-import bedroomImage from "@/assets/bedroom-hero.jpg";
+import modularKitchen from "@/assets/modular-kitchen.jpg";
+import modularWardrobe from "@/assets/modular-wardrobe.jpg";
+import modularShelving from "@/assets/modular-shelving.jpg";
 
 const categories = [
   {
     id: "modular-kitchens",
     title: "Modular Kitchens",
     description: "Complete modular kitchen solutions with cabinets, shelving, and storage—designed with AI and built from recycled polymer panels for durability and sustainability",
-    image: seatingImage,
+    image: modularKitchen,
   },
   {
     id: "modular-wardrobes",
     title: "Modular Wardrobes & Storage",
     description: "Customizable wardrobes, lofts, and storage units crafted from 100% recycled panels—fire retardant, termite-proof, and built to last",
-    image: livingImage,
+    image: modularWardrobe,
   },
   {
     id: "modular-beds",
     title: "Modular Beds & Tables",
     description: "Panel-based box beds, study tables, and workstations—modular designs that fit perfectly in your space",
-    image: bedroomImage,
+    image: modularKitchen,
   },
   {
     id: "modular-shelving",
     title: "Modular Shelving & Units",
     description: "Wall-mounted shelves, entertainment units, and display storage—all made from eco-friendly recycled polymer panels",
-    image: seatingImage,
+    image: modularShelving,
   },
 ];
 
@@ -63,8 +63,8 @@ const ProductCategories = () => {
   const handleSizeConfirm = (dimensions: { height: number; depth: number; width: number }) => {
     if (!selectedCategory) return;
 
-    // Calculate total area (simplified: H*W + 2*D*W for basic panel calculation)
-    const totalArea = (dimensions.height * dimensions.width) + (2 * dimensions.depth * dimensions.width);
+    // Calculate total area as Height × Width × Depth
+    const totalArea = dimensions.height * dimensions.width * dimensions.depth;
     const totalPrice = Math.round(totalArea * PRICE_PER_SQ_FT);
 
     const cartItem = {

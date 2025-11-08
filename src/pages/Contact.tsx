@@ -18,18 +18,57 @@ const Contact = () => {
     phone: "",
     message: ""
   });
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "Our team will contact you within 12 hours."
-    });
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      message: ""
-    });
+    
+    // Validate phone number
+    if (formData.phone.replace(/\D/g, '').length !== 10) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid 10-digit phone number.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch("https://formspree.io/f/xdkogevr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          _subject: "New Contact Form Submission - Bytras"
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Message Sent!",
+          description: "Our team will contact you within 12 hours."
+        });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          message: ""
+        });
+      } else {
+        toast({
+          title: "Failed to send",
+          description: "Please try again or contact us directly.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Network error",
+        description: "Please check your connection and try again.",
+        variant: "destructive"
+      });
+    }
   };
   return <div className="min-h-screen bg-background">
       <Header />
@@ -67,10 +106,10 @@ const Contact = () => {
                 </div>
                 <div>
                   <Label htmlFor="phone">Phone</Label>
-                  <Input id="phone" type="tel" value={formData.phone} onChange={e => setFormData({
+                  <Input id="phone" type="tel" placeholder="10-digit mobile number" value={formData.phone} onChange={e => setFormData({
                   ...formData,
                   phone: e.target.value
-                })} required />
+                })} pattern="[0-9]{10}" maxLength={10} required />
                 </div>
                 <div>
                   <Label htmlFor="message">Message</Label>

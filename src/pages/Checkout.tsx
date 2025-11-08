@@ -47,17 +47,56 @@ const Checkout = () => {
     }
   };
 
-  const handlePlaceOrder = () => {
-    // Here you would typically send the order to your backend
-    toast.success("Order Received! 🎉", {
-      description: "Our team will contact you within 12 hours to confirm your design and finalize your order.",
-      duration: 5000,
-    });
-    
-    clearCart();
-    setTimeout(() => {
-      navigate("/");
-    }, 2000);
+  const handlePlaceOrder = async () => {
+    const total = getCartTotal();
+    const formData = {
+      name,
+      phone,
+      email,
+      address: `${address}, ${city} - ${pincode}${landmark ? `, Near ${landmark}` : ''}`,
+      locationType,
+      items: cart.map(item => ({
+        category: item.categoryTitle,
+        dimensions: `${item.height}ft × ${item.depth}ft × ${item.width}ft`,
+        area: (item.height * item.width * item.depth).toFixed(2),
+        price: item.totalPrice
+      })),
+      subtotal: total,
+      advance_30: (total * 0.3).toFixed(2),
+      design_20: (total * 0.2).toFixed(2),
+      installation_50: (total * 0.5).toFixed(2),
+      total: total
+    };
+
+    // Validate phone (10 digits)
+    if (phone.replace(/\D/g, '').length !== 10) {
+      toast.error("Please enter a valid 10-digit phone number");
+      return;
+    }
+
+    try {
+      const response = await fetch("https://formspree.io/f/xdkogevr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          _subject: "New Order Submission - Bytras"
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Order Received! 🎉", {
+          description: "Our team will contact you within 12 hours to confirm your design and finalize your order.",
+          duration: 5000,
+        });
+        clearCart();
+        setTimeout(() => navigate("/"), 2000);
+      } else {
+        toast.error("Failed to submit order. Please try again or contact us directly.");
+      }
+    } catch (error) {
+      toast.error("Network error. Please check your connection and try again.");
+    }
   };
 
   return (
@@ -184,9 +223,11 @@ const Checkout = () => {
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder="+91 XXXXX XXXXX"
+                    placeholder="10-digit mobile number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    pattern="[0-9]{10}"
+                    maxLength={10}
                   />
                 </div>
 
@@ -287,11 +328,25 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <div className="bg-accent/30 border border-border rounded-lg p-6">
-                <h3 className="font-medium text-foreground mb-2">Payment Process</h3>
-                <p className="text-sm text-muted-foreground">
-                  No payment required now. Our team will contact you within 12 hours to confirm your design, 
-                  finalize the quote, and send a payment link for 50% advance to start production.
+              <div className="bg-accent/20 border border-border rounded-lg p-6">
+                <h3 className="font-medium text-foreground mb-3">Payment Breakdown</h3>
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">30% Advance (After Confirmation)</span>
+                    <span className="text-foreground font-medium">₹{(getCartTotal() * 0.3).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">20% Design Finalization</span>
+                    <span className="text-foreground font-medium">₹{(getCartTotal() * 0.2).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">50% After Installation</span>
+                    <span className="text-foreground font-medium">₹{(getCartTotal() * 0.5).toLocaleString()}</span>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  No payment required now. Our team will contact you within 12 hours to confirm your design 
+                  and send payment link for the advance.
                 </p>
               </div>
 
