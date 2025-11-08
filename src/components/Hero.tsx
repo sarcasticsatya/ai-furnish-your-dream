@@ -6,8 +6,8 @@ const Hero = () => {
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <p className="text-sm tracking-[0.3em] text-muted-foreground mb-4">DESIGN FURNITURES BY CHATTING WITH AI</p>
         
-        <h1 className="text-5xl md:text-7xl font-light tracking-tight text-foreground mb-6">MODULAR FURNITURES DESIGNED BY YOU,         BUILT BY BYTRAS<br />
-          DESIGNED FOR YOUR SPACE
+        <h1 className="text-5xl md:text-7xl font-light tracking-tight text-foreground mb-6">
+          MODULAR FURNITURES DESIGNED BY YOU,<br />BUILT BY BYTRAS
         </h1>
         
         <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">Upload your space. Describe your vision. Get modular—kitchens, wardrobes, lofts, beds, and storage, crafted from 100% recycled polymer panels Designed, Built and Installed to your style.</p>
