@@ -48,7 +48,7 @@ const HowItWorks = () => {
               <div 
                 key={index} 
                 className="relative text-center group animate-fade-in"
-                style={{ animationDelay: `${index * 150}ms` }}
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 {/* Step number */}
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-background border-2 border-primary text-primary text-sm font-medium flex items-center justify-center z-10">

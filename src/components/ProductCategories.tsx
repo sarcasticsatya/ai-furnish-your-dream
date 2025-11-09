@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import SizeInputDialog from "./SizeInputDialog";
 import modularKitchen from "@/assets/modular-kitchen.jpg";
 import modularWardrobe from "@/assets/modular-wardrobe.jpg";
@@ -39,9 +39,25 @@ const categories = [
 const ProductCategories = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState<typeof categories[0] | null>(null);
   const [isSizeDialogOpen, setIsSizeDialogOpen] = useState(false);
   const [actionType, setActionType] = useState<"cart" | "buy">("cart");
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (hash && categories.some(cat => cat.id === hash)) {
+      setHighlightedId(hash);
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+      setTimeout(() => setHighlightedId(null), 2000);
+    }
+  }, [location]);
 
   const scrollToDesignStudio = () => {
     document.getElementById('design-studio')?.scrollIntoView({ behavior: 'smooth' });
@@ -106,8 +122,10 @@ const ProductCategories = () => {
             <div
               key={category.id}
               id={category.id}
-              className="group relative overflow-hidden rounded-lg animate-fade-in"
-              style={{ animationDelay: `${index * 150}ms` }}
+              className={`group relative overflow-hidden rounded-lg animate-fade-in transition-all duration-300 ${
+                highlightedId === category.id ? 'ring-4 ring-primary shadow-2xl scale-105' : ''
+              }`}
+              style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="aspect-[4/5] overflow-hidden">
                 <img

@@ -11,17 +11,17 @@ const Footer = () => {
             <h4 className="font-medium mb-4">Shop</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/#living" className="text-background/70 hover:text-background transition-colors">
+                <a href="/#modular-shelving" className="text-background/70 hover:text-background transition-colors">
                   Living
                 </a>
               </li>
               <li>
-                <a href="/#kitchen" className="text-background/70 hover:text-background transition-colors">
+                <a href="/#modular-kitchens" className="text-background/70 hover:text-background transition-colors">
                   Kitchen
                 </a>
               </li>
               <li>
-                <a href="/#bedroom" className="text-background/70 hover:text-background transition-colors">
+                <a href="/#beds-tables" className="text-background/70 hover:text-background transition-colors">
                   Bedroom
                 </a>
               </li>
