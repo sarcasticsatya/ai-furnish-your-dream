@@ -17,7 +17,7 @@ const Header = () => {
     { to: "/partners", label: "Partners" },
     { to: "/impact", label: "Impact" },
     { to: "/pricing", label: "Pricing" },
-    { href: "/#design-studio", label: "Design Studio" },
+    { href: "#design-studio", label: "Design Studio" },
     { to: "/contact", label: "Contact" },
   ];
 

@@ -47,15 +47,26 @@ const ProductCategories = () => {
 
   useEffect(() => {
     const hash = location.hash.replace('#', '');
-    if (hash && categories.some(cat => cat.id === hash)) {
+    
+    // Handle bedroom-all to highlight both bedroom categories
+    if (hash === 'bedroom-all') {
+      setHighlightedId('bedroom-all');
+      setTimeout(() => {
+        const element = document.getElementById('beds-tables');
+        if (element) {
+          element.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }
+      }, 10);
+      setTimeout(() => setHighlightedId(null), 1500);
+    } else if (hash && categories.some(cat => cat.id === hash)) {
       setHighlightedId(hash);
       setTimeout(() => {
         const element = document.getElementById(hash);
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.scrollIntoView({ behavior: 'auto', block: 'center' });
         }
-      }, 100);
-      setTimeout(() => setHighlightedId(null), 2000);
+      }, 10);
+      setTimeout(() => setHighlightedId(null), 1500);
     }
   }, [location]);
 
@@ -123,7 +134,8 @@ const ProductCategories = () => {
               key={category.id}
               id={category.id}
               className={`group relative overflow-hidden rounded-lg animate-fade-in transition-all duration-300 ${
-                highlightedId === category.id ? 'ring-4 ring-primary shadow-2xl scale-105' : ''
+                (highlightedId === category.id || (highlightedId === 'bedroom-all' && (category.id === 'beds-tables' || category.id === 'modular-wardrobes'))) 
+                  ? 'ring-4 ring-primary shadow-2xl scale-105' : ''
               }`}
               style={{ animationDelay: `${index * 50}ms` }}
             >

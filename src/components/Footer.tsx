@@ -21,7 +21,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/#beds-tables" className="text-background/70 hover:text-background transition-colors">
+                <a href="/#bedroom-all" className="text-background/70 hover:text-background transition-colors">
                   Bedroom
                 </a>
               </li>
