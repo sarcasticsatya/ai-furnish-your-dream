@@ -19,7 +19,20 @@ const DesignStudio = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUploadedImage(reader.result as string);
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return;
+
+          // Preserve original dimensions and orientation
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          
+          setUploadedImage(canvas.toDataURL('image/jpeg', 0.95));
+        };
+        img.src = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
@@ -166,61 +179,81 @@ const DesignStudio = () => {
 
         <div className="max-w-4xl mx-auto">
           {!generatedImage ? (
-            <div className="space-y-8 animate-fade-in">
-              <Card className="p-8">
-                <h3 className="text-xl font-medium mb-4">Upload Your Space</h3>
-                <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
+            <div className="space-y-6 md:space-y-8 animate-fade-in">
+              <Card className="p-4 sm:p-6 md:p-8">
+                <h3 className="text-lg md:text-xl font-medium mb-4">Upload Your Space</h3>
+                <div className="border-2 border-dashed border-border rounded-lg p-6 md:p-12 text-center">
                   {uploadedImage ? (
                     <div className="space-y-4 animate-scale-in">
-                      <img src={uploadedImage} alt="Uploaded space" className="max-h-64 mx-auto rounded" />
-                      <Button variant="secondary" onClick={() => setUploadedImage(null)}>
+                      <img 
+                        src={uploadedImage} 
+                        alt="Uploaded space" 
+                        className="max-h-48 md:max-h-64 w-auto mx-auto rounded object-contain"
+                      />
+                      <Button variant="secondary" onClick={() => setUploadedImage(null)} className="w-full sm:w-auto">
                         Change Image
                       </Button>
                     </div>
                   ) : (
-                    <label className="cursor-pointer">
-                      <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                      <p className="text-muted-foreground mb-2">Click to upload or drag and drop</p>
-                      <p className="text-sm text-muted-foreground">PNG, JPG up to 10MB</p>
+                    <label className="cursor-pointer block">
+                      <Upload className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 text-muted-foreground" />
+                      <p className="text-sm md:text-base text-muted-foreground mb-2">Click to upload or drag and drop</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">PNG, JPG up to 10MB</p>
                       <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
                     </label>
                   )}
                 </div>
               </Card>
 
-              <Card className="p-8">
-                <h3 className="text-xl font-medium mb-4">Describe Your Vision</h3>
+              <Card className="p-4 sm:p-6 md:p-8">
+                <h3 className="text-lg md:text-xl font-medium mb-4">Describe Your Vision</h3>
                 <Textarea
                   placeholder="Example: Design a modern Wardrobe in teak wood color with brass handles ..."
-                  className="min-h-[120px] mb-4"
+                  className="min-h-[100px] md:min-h-[120px] mb-4 text-sm md:text-base"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                 />
                 <Button
                   size="lg"
-                  className="w-full"
+                  className="w-full text-sm md:text-base"
                   onClick={handleGenerate}
                   disabled={!uploadedImage || !prompt || isGenerating}
                 >
-                  <Sparkles className="mr-2 h-5 w-5" />
+                  <Sparkles className="mr-2 h-4 w-5 md:h-5 md:w-5" />
                   {isGenerating ? "Generating Your Design..." : "Generate Design"}
                 </Button>
               </Card>
             </div>
           ) : (
-            <div className="space-y-8 animate-fade-in">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-light">Your Custom Design</h3>
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={addWatermarkAndDownload} disabled={isGenerating}>
+            <div className="space-y-6 md:space-y-8 animate-fade-in">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <h3 className="text-xl md:text-2xl font-light">Your Custom Design</h3>
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                  <Button 
+                    variant="outline" 
+                    onClick={addWatermarkAndDownload} 
+                    disabled={isGenerating}
+                    className="flex-1 sm:flex-none text-sm"
+                  >
                     <Download className="mr-2 h-4 w-4" />
-                    Save Image
+                    <span className="hidden sm:inline">Save Image</span>
+                    <span className="sm:hidden">Save</span>
                   </Button>
-                  <Button variant="outline" onClick={handleRegenerate} disabled={isGenerating}>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleRegenerate} 
+                    disabled={isGenerating}
+                    className="flex-1 sm:flex-none text-sm"
+                  >
                     <RefreshCw className={`mr-2 h-4 w-4 ${isGenerating ? "animate-spin" : ""}`} />
-                    {isGenerating ? "Regenerating..." : "Regenerate"}
+                    <span className="hidden sm:inline">{isGenerating ? "Regenerating..." : "Regenerate"}</span>
+                    <span className="sm:hidden">Regen</span>
                   </Button>
-                  <Button variant="ghost" onClick={handleStartOver}>
+                  <Button 
+                    variant="ghost" 
+                    onClick={handleStartOver}
+                    className="w-full sm:w-auto text-sm"
+                  >
                     Start Over
                   </Button>
                 </div>
@@ -229,21 +262,30 @@ const DesignStudio = () => {
               <Card className="overflow-hidden animate-scale-in">
                 {isGenerating ? (
                   <div className="aspect-[4/3] bg-secondary relative">
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <Sparkles className="w-16 h-16 text-primary animate-pulse mb-4" />
-                      <p className="text-muted-foreground animate-fade-in">Creating your custom furniture design...</p>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                      <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-primary animate-pulse mb-4" />
+                      <p className="text-sm md:text-base text-muted-foreground animate-fade-in text-center">
+                        Creating your custom furniture design...
+                      </p>
                     </div>
                   </div>
                 ) : (
                   <div className="relative group">
-                    <img src={generatedImage} alt="Generated furniture design" className="w-full h-auto" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                      <div className="text-left">
-                        <h4 className="text-xl font-medium text-foreground mb-2">Your Custom Design</h4>
-                        <p className="text-sm text-muted-foreground mb-4">
+                    <img 
+                      src={generatedImage} 
+                      alt="Generated furniture design" 
+                      className="w-full h-auto object-contain"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 md:p-6">
+                      <div className="text-left w-full">
+                        <h4 className="text-lg md:text-xl font-medium text-foreground mb-2">Your Custom Design</h4>
+                        <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4">
                           Made from 100% recycled plastic (PP) - Fire retardant & eco-friendly
                         </p>
-                        <Button className="w-full sm:w-auto" onClick={() => (window.location.href = "/contact")}>
+                        <Button 
+                          className="w-full sm:w-auto text-sm md:text-base" 
+                          onClick={() => (window.location.href = "/contact")}
+                        >
                           Request Quote
                         </Button>
                       </div>
@@ -253,8 +295,8 @@ const DesignStudio = () => {
               </Card>
 
               {!isGenerating && (
-                <div className="text-center animate-fade-in">
-                  <p className="text-sm text-muted-foreground mb-4">
+                <div className="text-center animate-fade-in px-4">
+                  <p className="text-xs md:text-sm text-muted-foreground mb-4">
                     Love this design? Our team will craft it from sustainable recycled materials.
                   </p>
                 </div>

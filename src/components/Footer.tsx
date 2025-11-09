@@ -10,19 +10,23 @@ const Footer = () => {
           <div>
             <h4 className="font-medium mb-4">Shop</h4>
             <ul className="space-y-2 text-sm">
-              
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
+                <a href="/#living" className="text-background/70 hover:text-background transition-colors">
                   Living
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
+                <a href="/#kitchen" className="text-background/70 hover:text-background transition-colors">
+                  Kitchen
+                </a>
+              </li>
+              <li>
+                <a href="/#bedroom" className="text-background/70 hover:text-background transition-colors">
                   Bedroom
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
+                <a href="/#design-studio" className="text-background/70 hover:text-background transition-colors">
                   Custom Design
                 </a>
               </li>
@@ -33,21 +37,18 @@ const Footer = () => {
             <h4 className="font-medium mb-4">Company</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
+                <a href="/#how-it-works" className="text-background/70 hover:text-background transition-colors">
                   How It Works
                 </a>
               </li>
               <li>
-                
+                <a href="/pricing" className="text-background/70 hover:text-background transition-colors">
+                  Pricing
+                </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
-                  Contact
+                <a href="/impact" className="text-background/70 hover:text-background transition-colors">
+                  Impact
                 </a>
               </li>
             </ul>
@@ -57,23 +58,23 @@ const Footer = () => {
             <h4 className="font-medium mb-4">Support</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
-                  FAQs
+                <a href="/about" className="text-background/70 hover:text-background transition-colors">
+                  About
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
-                  Shipping & Delivery
+                <a href="/team" className="text-background/70 hover:text-background transition-colors">
+                  Team
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
-                  Returns
+                <a href="/partners" className="text-background/70 hover:text-background transition-colors">
+                  Partners
                 </a>
               </li>
               <li>
-                <a href="#" className="text-background/70 hover:text-background transition-colors">
-                  Warranty
+                <a href="/contact" className="text-background/70 hover:text-background transition-colors">
+                  Contact
                 </a>
               </li>
             </ul>
