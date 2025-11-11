@@ -83,6 +83,7 @@ const Footer = () => {
 
         <div className="pt-8 border-t border-background/10 text-center text-sm text-background/60">
           <p>© 2025 Bytras. All rights reserved.</p>
+          <a href="/auth" className="text-background/20 hover:text-background/40 text-xs mt-2 inline-block transition-colors">Admin</a>
         </div>
       </div>
     </footer>;
