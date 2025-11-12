@@ -1,29 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-const inputSchema = z.object({
-  imageBase64: z.string()
-    .regex(/^data:image\/(png|jpeg|jpg|webp);base64,/i, 'Invalid image format')
-    .refine(
-      (data) => {
-        const base64Data = data.split(',')[1];
-        const sizeInBytes = (base64Data.length * 3) / 4;
-        return sizeInBytes <= 10485760; // 10MB
-      },
-      { message: 'Image must be less than 10MB' }
-    ),
-  prompt: z.string()
-    .trim()
-    .min(10, 'Prompt must be at least 10 characters')
-    .max(500, 'Prompt must be under 500 characters')
-    .regex(/^[a-zA-Z0-9\s.,!?'-]+$/, 'Prompt contains invalid characters')
-});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -31,64 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    // Authenticate user
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-    if (authError || !user) {
-      console.error("Authentication error:", authError);
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Verify admin role
-    const { data: roleData, error: roleError } = await supabaseClient
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'admin')
-      .single();
-
-    if (roleError || !roleData) {
-      console.error("Admin verification failed:", roleError);
-      return new Response(JSON.stringify({ error: 'Admin access required' }), {
-        status: 403,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Parse and validate input
-    const body = await req.json();
-    let validatedInput;
-    
-    try {
-      validatedInput = inputSchema.parse(body);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        console.error("Validation error:", error.errors);
-        return new Response(
-          JSON.stringify({ error: 'Invalid input', details: error.errors }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      throw error;
-    }
-
-    const { imageBase64, prompt } = validatedInput;
+    const { imageBase64, prompt } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
