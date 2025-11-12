@@ -1,4 +1,4 @@
 project_id = "qymphlzbiamvjkigodqp"
 
 [functions.generate-furniture-design]
-verify_jwt = false
+verify_jwt = true
