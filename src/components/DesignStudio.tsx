@@ -38,6 +38,62 @@ const DesignStudio = () => {
     }
   };
 
+  const applyWatermark = async (imageUrl: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Could not get canvas context"));
+        return;
+      }
+
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = imageUrl;
+
+      img.onload = async () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+
+        // Load and draw logo
+        const logoImg = new Image();
+        logoImg.src = logo;
+        
+        logoImg.onload = () => {
+          const logoSize = Math.min(img.width, img.height) * 0.15;
+          const padding = 20;
+          ctx.globalAlpha = 0.8;
+          ctx.drawImage(logoImg, padding, padding, logoSize, logoSize);
+
+          // Add date watermark
+          ctx.globalAlpha = 0.7;
+          const fontSize = Math.max(16, img.width * 0.02);
+          ctx.font = `${fontSize}px Arial`;
+          ctx.fillStyle = "#000000";
+          ctx.textAlign = "right";
+          const dateText = `Created: ${new Date().toLocaleDateString()}`;
+          const textWidth = ctx.measureText(dateText).width;
+          const textX = img.width - padding;
+          const textY = img.height - padding;
+
+          // Background for date text
+          ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+          ctx.fillRect(textX - textWidth - 10, textY - fontSize - 5, textWidth + 20, fontSize + 15);
+
+          ctx.fillStyle = "#000000";
+          ctx.fillText(dateText, textX, textY);
+
+          resolve(canvas.toDataURL("image/png"));
+        };
+
+        logoImg.onerror = () => reject(new Error("Failed to load logo"));
+      };
+
+      img.onerror = () => reject(new Error("Failed to load generated image"));
+    });
+  };
+
   const handleGenerate = async () => {
     if (!uploadedImage || !prompt) {
       toast({
@@ -64,7 +120,10 @@ const DesignStudio = () => {
         throw new Error(data.error);
       }
 
-      setGeneratedImage(data.imageUrl);
+      // Apply watermark to the generated image
+      const watermarkedImage = await applyWatermark(data.imageUrl);
+      setGeneratedImage(watermarkedImage);
+      
       toast({
         title: "Design Generated!",
         description: "Your custom furniture design is ready.",
@@ -95,72 +154,24 @@ const DesignStudio = () => {
     if (!generatedImage) return;
 
     try {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      // Load the generated image
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = generatedImage;
-
-      await new Promise((resolve) => {
-        img.onload = resolve;
+      // The image already has watermark, just download it
+      const blob = await fetch(generatedImage).then(r => r.blob());
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `bytras-design-${Date.now()}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Download Started",
+        description: "Your design is being downloaded.",
       });
-
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-
-      // Load and draw logo
-      const logoImg = new Image();
-      logoImg.src = logo;
-      await new Promise((resolve) => {
-        logoImg.onload = resolve;
-      });
-
-      const logoSize = Math.min(img.width, img.height) * 0.15;
-      const padding = 20;
-      ctx.globalAlpha = 0.8;
-      ctx.drawImage(logoImg, padding, padding, logoSize, logoSize);
-
-      // Add date watermark
-      ctx.globalAlpha = 0.7;
-      const fontSize = Math.max(16, img.width * 0.02);
-      ctx.font = `${fontSize}px Arial`;
-      ctx.fillStyle = "#000000";
-      ctx.textAlign = "right";
-      const dateText = `Created: ${new Date().toLocaleDateString()}`;
-      const textWidth = ctx.measureText(dateText).width;
-      const textX = img.width - padding;
-      const textY = img.height - padding;
-
-      // Background for date text
-      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-      ctx.fillRect(textX - textWidth - 10, textY - fontSize - 5, textWidth + 20, fontSize + 15);
-
-      ctx.fillStyle = "#000000";
-      ctx.fillText(dateText, textX, textY);
-
-      // Download
-      canvas.toBlob((blob) => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `bytras-design-${Date.now()}.png`;
-        a.click();
-        URL.revokeObjectURL(url);
-        toast({
-          title: "Download Started",
-          description: "Your design with watermark is being downloaded.",
-        });
-      }, "image/png");
     } catch (error) {
-      console.error("Watermark error:", error);
+      console.error("Download error:", error);
       toast({
         title: "Download Failed",
-        description: "Could not add watermark. Please try again.",
+        description: "Could not download the design. Please try again.",
         variant: "destructive",
       });
     }
