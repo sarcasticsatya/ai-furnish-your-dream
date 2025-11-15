@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Upload, Sparkles, RefreshCw, Download } from "lucide-react";
+import { Upload, Sparkles, RefreshCw, Download, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useCart } from "@/contexts/CartContext";
+import SizeInputDialog from "@/components/SizeInputDialog";
 import logo from "@/assets/logo.jpg";
 
 const DesignStudio = () => {
@@ -12,7 +14,9 @@ const DesignStudio = () => {
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSizeDialogOpen, setIsSizeDialogOpen] = useState(false);
   const { toast } = useToast();
+  const { addToCart } = useCart();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -65,6 +69,21 @@ const DesignStudio = () => {
       }
 
       setGeneratedImage(data.imageUrl);
+      
+      // Save to database
+      const { error: dbError } = await supabase
+        .from('generated_designs')
+        .insert({
+          original_image_url: uploadedImage,
+          prompt: prompt,
+          generated_image_url: data.imageUrl,
+          user_id: null, // Will be set when auth is enabled
+        });
+
+      if (dbError) {
+        console.error("Error saving design:", dbError);
+      }
+
       toast({
         title: "Design Generated!",
         description: "Your custom furniture design is ready.",
@@ -89,6 +108,34 @@ const DesignStudio = () => {
     setGeneratedImage(null);
     setUploadedImage(null);
     setPrompt("");
+  };
+
+  const handleAddToCart = () => {
+    setIsSizeDialogOpen(true);
+  };
+
+  const handleSizeConfirm = (dimensions: { height: number; depth: number; width: number; price: number; area: number }) => {
+    if (!generatedImage) return;
+
+    const cartItem = {
+      id: "",
+      categoryId: "custom-design",
+      categoryTitle: "Custom AI Design",
+      height: dimensions.height,
+      depth: dimensions.depth,
+      width: dimensions.width,
+      quantity: 1,
+      image: generatedImage,
+      price: dimensions.price,
+      area: dimensions.area,
+    };
+
+    addToCart(cartItem);
+    toast({
+      title: "Added to Cart ✅",
+      description: `Custom design added for ₹${dimensions.price.toLocaleString('en-IN')}`,
+    });
+    setIsSizeDialogOpen(false);
   };
 
   const addWatermarkAndDownload = async () => {
@@ -230,6 +277,15 @@ const DesignStudio = () => {
                 <h3 className="text-xl md:text-2xl font-light">Your Custom Design</h3>
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                   <Button 
+                    onClick={handleAddToCart}
+                    disabled={isGenerating}
+                    className="flex-1 sm:flex-none text-sm"
+                  >
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    <span className="hidden sm:inline">Add to Cart</span>
+                    <span className="sm:hidden">Cart</span>
+                  </Button>
+                  <Button 
                     variant="outline" 
                     onClick={addWatermarkAndDownload} 
                     disabled={isGenerating}
@@ -305,6 +361,13 @@ const DesignStudio = () => {
           )}
         </div>
       </div>
+
+      <SizeInputDialog
+        isOpen={isSizeDialogOpen}
+        onClose={() => setIsSizeDialogOpen(false)}
+        onConfirm={handleSizeConfirm}
+        categoryTitle="Custom AI Design"
+      />
     </section>
   );
 };

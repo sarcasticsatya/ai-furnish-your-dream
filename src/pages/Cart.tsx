@@ -53,6 +53,12 @@ const Cart = () => {
                       <p className="text-sm text-muted-foreground mb-2">
                         Dimensions: {item.height}ft (H) × {item.depth}ft (D) × {item.width}ft (W)
                       </p>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Area: {item.area.toFixed(2)} sq. ft. @ ₹1,199/sq.ft.
+                      </p>
+                      <p className="text-lg font-semibold text-primary">
+                        ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                      </p>
                       <div className="flex items-center gap-2 mt-3">
                         <span className="text-sm text-muted-foreground">Quantity:</span>
                         <Button
@@ -97,10 +103,38 @@ const Cart = () => {
                     <span>Total Items</span>
                     <span>{cart.reduce((total, item) => total + item.quantity, 0)}</span>
                   </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Total Area</span>
+                    <span>{cart.reduce((total, item) => total + (item.area * item.quantity), 0).toFixed(2)} sq. ft.</span>
+                  </div>
+                  <div className="border-t border-border pt-3 mt-3">
+                    <div className="flex justify-between text-xl font-semibold text-foreground">
+                      <span>Total Price</span>
+                      <span>₹{cart.reduce((total, item) => total + (item.price * item.quantity), 0).toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-muted/30 rounded-lg p-4 mb-6">
+                  <h3 className="font-semibold text-foreground mb-3 text-sm">Payment Breakdown</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">30% Advance (Now)</span>
+                      <span className="font-medium">₹{(cart.reduce((total, item) => total + (item.price * item.quantity), 0) * 0.30).toLocaleString('en-IN')}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">20% Design Finalization</span>
+                      <span className="font-medium">₹{(cart.reduce((total, item) => total + (item.price * item.quantity), 0) * 0.20).toLocaleString('en-IN')}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">50% After Installation</span>
+                      <span className="font-medium">₹{(cart.reduce((total, item) => total + (item.price * item.quantity), 0) * 0.50).toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <p className="text-xs text-muted-foreground mb-6">
-                  *Our team will contact you with a detailed quote after reviewing your requirements
+                  *Our team will contact you to finalize the design and confirm the installation timeline
                 </p>
 
                 <Link to="/checkout">

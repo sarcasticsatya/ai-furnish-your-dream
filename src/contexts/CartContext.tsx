@@ -9,6 +9,8 @@ export interface CartItem {
   width: number;
   quantity: number;
   image: string;
+  price: number; // Price in ₹
+  area: number; // Area in sq. ft.
 }
 
 interface CartContextType {
@@ -29,7 +31,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const addToCart = (item: CartItem) => {
-    const updatedCart = [...cart, { ...item, id: Date.now().toString(), quantity: 1 }];
+    const updatedCart = [...cart, { ...item, id: Date.now().toString() }];
     setCart(updatedCart);
     localStorage.setItem('bytras-cart', JSON.stringify(updatedCart));
   };

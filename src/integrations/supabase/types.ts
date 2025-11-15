@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      generated_designs: {
+        Row: {
+          created_at: string | null
+          generated_image_url: string
+          id: string
+          original_image_url: string
+          prompt: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          generated_image_url: string
+          id?: string
+          original_image_url: string
+          prompt: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          generated_image_url?: string
+          id?: string
+          original_image_url?: string
+          prompt?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
