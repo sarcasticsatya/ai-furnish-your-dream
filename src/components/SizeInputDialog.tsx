@@ -14,7 +14,7 @@ import { toast } from "sonner";
 interface SizeInputDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (dimensions: { height: number; depth: number; width: number }) => void;
+  onConfirm: (dimensions: { height: number; depth: number; width: number; price: number; area: number }) => void;
   categoryTitle: string;
 }
 
@@ -28,6 +28,22 @@ const SizeInputDialog = ({
   const [depth, setDepth] = useState("");
   const [width, setWidth] = useState("");
 
+  const PRICE_PER_SQ_FT = 1199; // ₹1,199 per sq. ft.
+
+  const calculatePrice = () => {
+    const h = parseFloat(height);
+    const d = parseFloat(depth);
+    const w = parseFloat(width);
+    
+    if (!h || !d || !w || h <= 0 || d <= 0 || w <= 0) return null;
+    
+    const area = h * d * w;
+    const price = area * PRICE_PER_SQ_FT;
+    return { area, price };
+  };
+
+  const priceCalculation = calculatePrice();
+
   const handleConfirm = () => {
     const h = parseFloat(height);
     const d = parseFloat(depth);
@@ -38,7 +54,10 @@ const SizeInputDialog = ({
       return;
     }
 
-    onConfirm({ height: h, depth: d, width: w });
+    const area = h * d * w;
+    const price = area * PRICE_PER_SQ_FT;
+
+    onConfirm({ height: h, depth: d, width: w, price, area });
     setHeight("");
     setDepth("");
     setWidth("");
@@ -94,6 +113,20 @@ const SizeInputDialog = ({
               onChange={(e) => setWidth(e.target.value)}
             />
           </div>
+
+          {priceCalculation && (
+            <div className="bg-muted/50 p-4 rounded-lg space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Total Area:</span>
+                <span className="font-medium">{priceCalculation.area.toFixed(2)} sq. ft.</span>
+              </div>
+              <div className="flex justify-between text-lg font-semibold">
+                <span>Total Price:</span>
+                <span className="text-primary">₹{priceCalculation.price.toLocaleString('en-IN')}</span>
+              </div>
+              <p className="text-xs text-muted-foreground">@ ₹1,199 per sq. ft.</p>
+            </div>
+          )}
         </div>
 
         <div className="flex gap-3">

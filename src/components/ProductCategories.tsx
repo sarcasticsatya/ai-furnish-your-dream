@@ -86,7 +86,7 @@ const ProductCategories = () => {
     setIsSizeDialogOpen(true);
   };
 
-  const handleSizeConfirm = (dimensions: { height: number; depth: number; width: number }) => {
+  const handleSizeConfirm = (dimensions: { height: number; depth: number; width: number; price: number; area: number }) => {
     if (!selectedCategory) return;
 
     const cartItem = {
@@ -98,12 +98,14 @@ const ProductCategories = () => {
       width: dimensions.width,
       quantity: 1,
       image: selectedCategory.image,
+      price: dimensions.price,
+      area: dimensions.area,
     };
 
     if (actionType === "cart") {
       addToCart(cartItem);
       toast.success("Added to Cart ✅", {
-        description: "Item added to your cart successfully",
+        description: `Item added for ₹${dimensions.price.toLocaleString('en-IN')}`,
         action: {
           label: "View Cart",
           onClick: () => navigate("/cart"),
