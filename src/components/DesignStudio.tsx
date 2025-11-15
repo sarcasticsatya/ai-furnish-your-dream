@@ -55,6 +55,34 @@ const DesignStudio = () => {
     setIsGenerating(true);
 
     try {
+      // First, save the prompt to database to get an ID
+      const { data: designData, error: dbError } = await supabase
+        .from('generated_designs')
+        .insert({
+          prompt: prompt,
+          user_id: null, // Will be set when auth is enabled
+        })
+        .select()
+        .single();
+
+      if (dbError) throw dbError;
+
+      const designId = designData.id;
+
+      // Convert base64 to blob for original image
+      const originalBlob = await (await fetch(uploadedImage)).blob();
+      
+      // Upload original image to storage
+      const { error: originalUploadError } = await supabase.storage
+        .from('original-images')
+        .upload(`${designId}_original.jpg`, originalBlob, {
+          contentType: 'image/jpeg',
+          upsert: true
+        });
+
+      if (originalUploadError) throw originalUploadError;
+
+      // Generate design with AI
       const { data, error } = await supabase.functions.invoke("generate-furniture-design", {
         body: {
           imageBase64: uploadedImage,
@@ -68,21 +96,25 @@ const DesignStudio = () => {
         throw new Error(data.error);
       }
 
-      setGeneratedImage(data.imageUrl);
+      // Convert generated base64 to blob
+      const generatedBlob = await (await fetch(data.imageUrl)).blob();
       
-      // Save to database
-      const { error: dbError } = await supabase
-        .from('generated_designs')
-        .insert({
-          original_image_url: uploadedImage,
-          prompt: prompt,
-          generated_image_url: data.imageUrl,
-          user_id: null, // Will be set when auth is enabled
+      // Upload generated image to storage
+      const { error: generatedUploadError } = await supabase.storage
+        .from('generated-images')
+        .upload(`${designId}_generated.jpg`, generatedBlob, {
+          contentType: 'image/jpeg',
+          upsert: true
         });
 
-      if (dbError) {
-        console.error("Error saving design:", dbError);
-      }
+      if (generatedUploadError) throw generatedUploadError;
+
+      // Get public URL for display
+      const { data: urlData } = supabase.storage
+        .from('generated-images')
+        .getPublicUrl(`${designId}_generated.jpg`);
+
+      setGeneratedImage(urlData.publicUrl);
 
       toast({
         title: "Design Generated!",
